@@ -1,6 +1,9 @@
 #include "menuwindow.h"
 #include "ui_menuwindow.h"
 
+#include "jsoncontroller.h"
+#include "testreport.h"
+
 #include <QDebug>
 #include <QFileDialog>
 #include <QWidget>
@@ -9,8 +12,6 @@
 #include <QMessageBox>
 #include <QIcon>
 #include <QStyleOption>
-#include "jsoncontroller.h"
-#include "testreport.h"
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // setup window
     ui->setupUi(this);
     this->setWindowTitle("Тестировщик");
+    this->setWindowIcon(QIcon(":/app.ico"));
 
     // connect buttons
     connect(ui->btn_page1_2, SIGNAL(clicked()), this, SLOT(on_btn_page1_clicked()));
@@ -52,6 +54,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
 void MainWindow::update_question_questionnaire()
 {
     if (number_of_question_ < this->test_data_.getQuestions().size()) {
@@ -60,7 +63,7 @@ void MainWindow::update_question_questionnaire()
         this->questionnaire_widget->setAnswers(this->test_data_.getQuestions().at(this->number_of_question_).getAnswers());
 
         if (this->number_of_question_ != 0)
-            this->client_answers_.pushBack_question(Question(this->test_data_.getQuestions().at(this->number_of_question_).getQu(),
+            this->client_answers_.pushBack_question(Question(this->test_data_.getQuestions().at(this->number_of_question_ - 1).getQu(),
                                                              {questionnaire_widget->getCurrentAsnwer()}));
         this->number_of_question_++;
     }
@@ -72,6 +75,7 @@ void MainWindow::update_question_questionnaire()
     }
 }
 
+
 void MainWindow::update_question_complete()
 {
     if (number_of_question_ < this->test_data_.getQuestions().size()) {
@@ -79,7 +83,7 @@ void MainWindow::update_question_complete()
         this->complete_widget->setQuestion(this->test_data_.getQuestions().at(this->number_of_question_).getQu());
 
         if (this->number_of_question_ != 0)
-            this->client_answers_.pushBack_question(Question(this->test_data_.getQuestions().at(this->number_of_question_).getQu(),
+            this->client_answers_.pushBack_question(Question(this->test_data_.getQuestions().at(this->number_of_question_ - 1).getQu(),
                                                     {complete_widget->getCurrentAsnwer()}));
         this->number_of_question_++;
     }
@@ -117,6 +121,7 @@ void MainWindow::on_btn_page2_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->page_2);
 }
+
 
 void MainWindow::on_btn_page3_clicked()
 {
@@ -171,8 +176,10 @@ void MainWindow::on_btn_report_clicked()
     this->client_answers_.setClientSurname(this->report_widget->getSurname());
     this->client_answers_.setClientGroup(this->report_widget->getGroup());
 
-    TestReport report(this->client_answers_, "C:/Tests_Psychology/Reports/");
-    report.createReport();
+    TestReport report(this->client_answers_, "C:\\Tests_Psychology\\Reports");
+    if (!report.createReport()) {
+        qDebug() << "Отчет не создан";
+    }
 
     ui->stackedWidget->setCurrentWidget(ui->page);
 }
