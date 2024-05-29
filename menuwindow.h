@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <qpushbutton>
 #include "file_data.h"
-#include "../../CustomWidgets/QQuestionWidget/qquestionwidget.h"
-#include "../../CustomWidgets/ReportWidget/reportwidget.h"
+#include "CustomWidgets/QQuestionWidget/qquestionwidget.h"
+#include "CustomWidgets/ReportWidget/reportwidget.h"
 
 
 QT_BEGIN_NAMESPACE
