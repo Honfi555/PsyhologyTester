@@ -9,7 +9,7 @@ class TestReport
 public:
     TestReport(const ClientData& client_data, const QString& path);
 
-    void createReport();
+    bool createReport();
 private:
     ClientData client_data_;
     QString path_;

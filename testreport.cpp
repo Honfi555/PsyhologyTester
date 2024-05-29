@@ -4,9 +4,9 @@
 
 TestReport::TestReport(const ClientData &client_data, const QString &path) : client_data_(client_data), path_(path) {}
 
-void TestReport::createReport()
+bool TestReport::createReport()
 {
-    this->path_ += "Отчёт " + this->client_data_.getClientGroup() +
+    this->path_ += "\\Отчёт " + this->client_data_.getClientGroup() +
                    " " + this->client_data_.getTestName() +
                    " " + this->client_data_.getClientName() +
                    " " + this->client_data_.getClientSurname() + ".html";
@@ -26,5 +26,9 @@ void TestReport::createReport()
     if (file.open(QIODevice::WriteOnly)) {
         file.write(report_text.toStdString().c_str());
         file.close();
+
+        return true;
     }
+
+    return false;
 }
